@@ -1,26 +1,29 @@
-class Nodos:
-	def __init__(self,nome):
-		self.nome = nome
-		self.conectadoCom = {}
-		self.distanciaDoNodoInicial = 1000000
+import main
 
-	def adicionaVizinhos(self,vizinho,peso=0):
-		self.conectadoCom[vizinho] = peso
 
-	def removeVizinho(self,a):
-		self.conectadoCom.pop(a)
+class Node:
+    def __init__(self, number):
+        self.number = number
+        self.neighbor_with_weights = {}
+        self.distance = main.INFINITY
 
-	def setDistanciaDoNodoInicial(self,distancia):
-		self.distanciaDoNodoInicial = distancia
+    def add_edge(self, neighbor, weight=0):
+        self.neighbor_with_weights[neighbor] = weight
 
-	def getConexoes(self):
-		return self.conectadoCom.keys()
+    def remove_edge(self, neighbor):
+        self.neighbor_with_weights.pop(neighbor)
 
-	def getNome(self):
-		return self.nome
+    def set_distance(self, distance):
+        self.distance = distance
 
-	def getPeso(self,vizinho):
-		return self.conectadoCom[vizinho]
+    def get_neighbors(self):
+        return self.neighbor_with_weights.keys()
 
-	def getDistanciaDoNodoInicial(self):
-		return self.distanciaDoNodoInicial
+    def get_number(self):
+        return self.number
+
+    def get_weight(self, neighbor):
+        return self.neighbor_with_weights[neighbor]
+
+    def get_distance(self):
+        return self.distance

@@ -1,69 +1,70 @@
+import main
 from node import *
-class Grafo:
+
+
+class Graph:
     def __init__(self):
-        self.listaDeNodos = {}
-        self.numeroDeNodos = 0
+        self.dict_nodes = {}
+        self.num_nodes = 0
 
-    def adicionaNodo(self, nome):
-        self.numeroDeNodos = self.numeroDeNodos + 1
-        novoNodo = Nodos(nome)
-        self.listaDeNodos[nome] = novoNodo
+    def add_node(self, number):
+        self.num_nodes = self.num_nodes + 1
+        cur_node = Node(number)
+        self.dict_nodes[number] = cur_node
 
-        return novoNodo
+        return cur_node
 
-    def criaAresta(self, a, b, peso=0):
-        self.listaDeNodos[a].adicionaVizinhos(self.listaDeNodos[b], peso)
-        self.listaDeNodos[b].adicionaVizinhos(self.listaDeNodos[a], peso)
+    def add_two_way_edge(self, node_a, node_b, weight=0):
+        self.dict_nodes[node_a].add_edge(self.dict_nodes[node_b], weight)
+        self.dict_nodes[node_b].add_edge(self.dict_nodes[node_a], weight)
 
-    def deletaMenorAresta(self,minimumPathList):
+    def delete_minor_edge(self, minimumPathList):
         initial_node = {}
         final_node = {}
-        pesoFinal = 9999999
+        final_weight = main.INFINITY
 
-        #encontra aresta de menor peso entre as arestas relacionadas com elementos do menor caminho
+        #finds the lightest edge between the edges related to the shortest path elements
         for x in minimumPathList:
-            for y in self.listaDeNodos[x].conectadoCom:
-                peso = self.listaDeNodos[x].conectadoCom[y]
-                #print str(x) +" conecta com: " + str(y.nome) + " com peso: " +str(peso)
-                if(pesoFinal> peso) and (existeNoPathMinimo(minimumPathList,y.nome)):
-                    pesoFinal = peso
+            for y in self.dict_nodes[x].neighbor_with_weights:
+                weight = self.dict_nodes[x].neighbor_with_weights[y]
+                if(final_weight > weight) and (exitst_in_minimum_path(minimumPathList, y.number)):
+                    final_weight = weight
                     initial_node = x
-                    final_node = y.nome
-       #print "menor aresta: "+ str(initial_node) + "," + str(final_node) + "peso:" + str(pesoFinal)
+                    final_node = y.number
 
 
-        #apaga do grafo caminho de ida e volta da aresta de menor peso
+        #erases the path of the lower weight edge from the graph
         if final_node != {}:
-            for j in self.listaDeNodos[initial_node].conectadoCom:
-                if j.nome == final_node:
-                    self.listaDeNodos[initial_node].conectadoCom.pop(j)
+            for j in self.dict_nodes[initial_node].neighbor_with_weights:
+                if j.number == final_node:
+                    self.dict_nodes[initial_node].neighbor_with_weights.pop(j)
                     break
-            for i in self.listaDeNodos[final_node].conectadoCom:
-                if i.nome == initial_node:
-                    self.listaDeNodos[final_node].conectadoCom.pop(i)
+            for i in self.dict_nodes[final_node].neighbor_with_weights:
+                if i.number == initial_node:
+                    self.dict_nodes[final_node].neighbor_with_weights.pop(i)
                     break
-
 
     def __iter__(self):
-        return iter(self.listaDeNodos.values())
+        return iter(self.dict_nodes.values())
 
     def parse_edge(self, edge):
         numbers_series = edge.split(',')
         return Edge(numbers_series[0], numbers_series[1], numbers_series[2:])
 
     def add_edge(self, parsed_edge):
-        self.criaAresta(parsed_edge._u, parsed_edge._v, parsed_edge.get_weight())
+        self.add_two_way_edge(parsed_edge._u, parsed_edge._v, parsed_edge.get_weight())
 
 
-def existeNoPathMinimo(minimumPathList, a):
+def exitst_in_minimum_path(minimumPathList, a):
     if a in minimumPathList:
         return True
     else:
         return False
 
+
 class Edge(object):
 
-    def __init__(self, u, v , weights):
+    def __init__(self, u, v, weights):
         self._u = int(u)
         self._v = int(v)
         self._weights = map(int, weights)
