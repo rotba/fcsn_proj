@@ -1,50 +1,51 @@
+import main
+
+
 class Dijkstra:
-	dictHeap = {}
-	dictDistanciaDoNodoInicial = {}
-	lastNodeTable = {}
-	minimunPathList = []
+    dictHeap = {}
+    dict_distance_to_initial_node = {}
+    last_node_table = {}
+    minimunPathList = []
 
-	def __init__(self,Grafo,nodoInicial,finalNode):
-		self.minimunPathList = []
-		for x in Grafo.listaDeNodos:
-			self.dictDistanciaDoNodoInicial[x] = 999999
-			self.dictHeap[x] = self.dictDistanciaDoNodoInicial[x]
-			self.lastNodeTable[x] = nodoInicial
+    def __init__(self, graph, initial_node, final_node):
+        self.minimunPathList = []
+        for x in graph.dict_nodes:
+            self.dict_distance_to_initial_node[x] = main.INFINITY
+            self.dictHeap[x] = self.dict_distance_to_initial_node[x]
+            self.last_node_table[x] = initial_node
 
-		self.dictDistanciaDoNodoInicial[nodoInicial] = 0
-		self.dictHeap[nodoInicial] = 0
+        self.dict_distance_to_initial_node[initial_node] = 0
+        self.dictHeap[initial_node] = 0
 
-		while self.dictHeap:
-			source_node_name = heapMinimo(self.dictHeap)
-			for dest_node in Grafo.listaDeNodos[source_node_name].getConexoes():
-				acrescimo = Grafo.listaDeNodos[source_node_name].getPeso(dest_node)
-				novaDistancia = self.dictDistanciaDoNodoInicial[source_node_name] + acrescimo
-				dest_node_name = dest_node.getNome()
-				if (novaDistancia < self.dictDistanciaDoNodoInicial[dest_node_name]):
-					self.dictDistanciaDoNodoInicial[dest_node_name] = novaDistancia
-					self.dictHeap[dest_node_name] = novaDistancia
-					self.lastNodeTable[dest_node_name] = source_node_name
+        while self.dictHeap:
+            source_node_name = heap_minimum(self.dictHeap)
+            for dest_node in graph.dict_nodes[source_node_name].get_neighbors():
+                addition = graph.dict_nodes[source_node_name].get_weight(dest_node)
+                new_distance = self.dict_distance_to_initial_node[source_node_name] + addition
+                dest_node_name = dest_node.get_number()
+                if (new_distance < self.dict_distance_to_initial_node[dest_node_name]):
+                    self.dict_distance_to_initial_node[dest_node_name] = new_distance
+                    self.dictHeap[dest_node_name] = new_distance
+                    self.last_node_table[dest_node_name] = source_node_name
 
-		#monta lista formando menor caminho a partir do node final percorrendo tabela de anteriores
-		#ate chegar no node inicial
-		self.minimunPathList.append(finalNode)
-		nodeAnterior = self.lastNodeTable[finalNode]
-		while nodoInicial != nodeAnterior:
-			self.minimunPathList.append(nodeAnterior)
-			nodeAnterior = self.lastNodeTable[nodeAnterior]
-		self.minimunPathList.append(nodoInicial)
-		self.minimunPathList = list(reversed(self.minimunPathList))
-
-def heapMinimo(dictHeap):
-    # Valor muito alto
-    infinito = 1000000
-    menorDistanciaNodoInicial = None
-    for menorDistancia in dictHeap:
-        if dictHeap[menorDistancia] < infinito:
-            infinito = dictHeap[menorDistancia]
-            menorDistanciaNodoInicial = menorDistancia
-    del dictHeap[menorDistanciaNodoInicial]
-
-    return menorDistanciaNodoInicial
+        # builds list forming the shortest path from the final node through the previous table
+        # until you reach the start node
+        self.minimunPathList.append(final_node)
+        previous_node = self.last_node_table[final_node]
+        while initial_node != previous_node:
+            self.minimunPathList.append(previous_node)
+            previous_node = self.last_node_table[previous_node]
+        self.minimunPathList.append(initial_node)
+        self.minimunPathList = list(reversed(self.minimunPathList))
 
 
+def heap_minimum(dictHeap):
+    infinity = main.INFINITY
+    shortest_initial_node_distance = None
+    for curr_shortest in dictHeap:
+        if dictHeap[curr_shortest] < infinity:
+            infinity = dictHeap[curr_shortest]
+            shortest_initial_node_distance = curr_shortest
+    del dictHeap[shortest_initial_node_distance]
+
+    return shortest_initial_node_distance
