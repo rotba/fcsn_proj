@@ -1,3 +1,5 @@
+import math
+
 from node import *
 
 
@@ -46,15 +48,26 @@ class Graph:
 	def __iter__(self):
 		return iter(self.dict_nodes.values())
 
-	def parse_edge(self, edge, g_reduce = False):
+	def parse_edge(self, edge):
 		numbers_series = edge.split(',')
-		return Edge.create(numbers_series[0], numbers_series[1], numbers_series[2:], g_reduce=g_reduce)
+		return Edge.create(numbers_series[0], numbers_series[1], numbers_series[2:])
 
 	def add_edge(self, parsed_edge):
 		self.add_two_way_edge(parsed_edge._u, parsed_edge._v, parsed_edge.get_weight())
 
 	@staticmethod
-	def from_text(file_path, g_reduce=False):
+	def calc_factors(parsed_edges):
+		def calc_factor(i_weights):
+			the_sum = sum(i_weights)
+			return math.ceil(math.log(the_sum,2))
+		ans = []
+		if len(parsed_edges) == 0:
+			return []
+		for i in range(len(parsed_edges[0]._weights)):
+			ans += [calc_factor(map(lambda e: e._weights[i],parsed_edges))]
+		return ans
+	@staticmethod
+	def from_text(file_path):
 		input_file = open(file_path, "r")
 		input_iter = input_file.__iter__()
 		num_of_nodes = int(input_iter.next())
@@ -67,9 +80,13 @@ class Graph:
 		for i in range(num_of_nodes):
 			graph.add_node(i)
 
+		pared_edges = []
 		for edge in input_iter:
-			parsed_edge = graph.parse_edge(edge,g_reduce=g_reduce)
-			graph.add_edge(parsed_edge)
+			pared_edges+= [graph.parse_edge(edge)]
+		factors = Graph.calc_factors(pared_edges)
+		for edge in pared_edges:
+			edge.set_factors(factors)
+			graph.add_edge(edge)
 		graph.set_num_of_nodes(num_of_nodes)
 		graph.set_initial_node(initial_node_number)
 		graph.set_dest_node(dest_node_number)
@@ -132,28 +149,32 @@ class Edge(object):
 
 	@staticmethod
 	def create(u, v, weights, g_reduce=False):
-		if g_reduce:
-			return ReducedEdge(u, v, weights)
-		else:
-			return Edge(u, v, weights)
+		return Edge(u, v, weights)
 
 	def __init__(self, u, v, weights):
 		self._u = int(u)
 		self._v = int(v)
 		self._weights = map(int, weights)
+		self._factors = [1]*len(weights)
+
+	def set_factors(self, factors):
+		self._factors = factors
 
 	def get_weight(self):
+		if len(self._weights) == 0:
+			return 0;
+		shifts = list(reversed(
+			reduce(
+				lambda acc, curr: acc + [acc[-1] + curr],
+				reversed(self._factors[1:]),
+				[0]
+			)
+		))
 		return reduce(
-			lambda curr, acc: curr + acc,
-			self._weights,
+			lambda acc, curr: curr[0]*math.pow(2, curr[1]) + acc,
+			zip(self._weights, shifts),
 			0
 		)
 
 
-class ReducedEdge(Edge):
-	def get_weight(self):
-		return reduce(
-			lambda curr, acc: curr + acc,
-			self._weights,
-			0
-		)
+
