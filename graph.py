@@ -80,7 +80,7 @@ class Graph:
         return ans
 
     @staticmethod
-    def edges_for_random_graph(num_nodes, density_factor=0.2, weight_max=7):
+    def edges_for_random_graph(num_nodes, density_factor=0.4, weight_max=7):
         # graph declaration
         edges = []
         for i,j in itertools.combinations(range(num_nodes), 2):
@@ -108,7 +108,12 @@ class Graph:
 
         pared_edges = []
         if edgestr.strip().lower() == 'r':
-            pared_edges = Graph.edges_for_random_graph(num_of_nodes)
+            density = next(input_iter, None)
+            try:
+                density = float(density)
+                pared_edges = Graph.edges_for_random_graph(num_of_nodes, density_factor=density)
+            except TypeError:
+                pared_edges = Graph.edges_for_random_graph(num_of_nodes)
         else:
             pared_edges += [graph.parse_edge(edgestr)]
             for edge in input_iter:
