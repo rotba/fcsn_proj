@@ -1,4 +1,5 @@
 import main
+import heapq
 
 
 class Dijkstra:
@@ -6,6 +7,7 @@ class Dijkstra:
     dict_distance_to_initial_node = {}
     last_node_table = {}
     minimunPathList = []
+
 
     def __init__(self, graph, initial_node, final_node):
         self.minimunPathList = []
