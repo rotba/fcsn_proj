@@ -7,10 +7,12 @@ from solution import Solution
 INFINITY = 999999999
 
 
-def solve(input):
+def solve(input, print_graph=False):
 	solution = Solution()
 	infinity = INFINITY
 	graph = Graph.from_text(input)
+	if print_graph:
+		graph.print_graph()
 	initial_node_number = graph.get_initial_node()
 	dest_node_number = graph.get_dest_node()
 	num_of_nodes = graph.get_num_of_nodes()

@@ -1,4 +1,6 @@
 import math
+import itertools
+import random
 
 from node import *
 
@@ -53,7 +55,16 @@ class Graph:
         return Edge.create(numbers_series[0], numbers_series[1], numbers_series[2:])
 
     def add_edge(self, parsed_edge):
+        self._edges.append(parsed_edge)
         self.add_two_way_edge(parsed_edge._u, parsed_edge._v, parsed_edge.get_weight())
+
+    def print_graph(self):
+        print ('Num_Nodes = {}'.format(self.get_num_of_nodes()))
+        print ('initial node = {}'.format(self.get_initial_node()))
+        print ('end node = {}'.format(self.get_dest_node()))
+        print ('========== EDGES ==========')
+        for edge in self._edges:
+            print (edge.to_string())
 
     @staticmethod
     def calc_factors(parsed_edges):
@@ -69,6 +80,17 @@ class Graph:
         return ans
 
     @staticmethod
+    def edges_for_random_graph(num_nodes, density_factor=0.4, weight_max=7):
+        # graph declaration
+        edges = []
+        for i,j in itertools.combinations(range(num_nodes), 2):
+            rnd = random.uniform(0, 1)
+            if rnd < density_factor:
+                edges += [Edge.create(i, j, [random.randrange(1, weight_max), random.randrange(1, weight_max),
+                                     random.randrange(1, weight_max)])]
+        return edges
+
+    @staticmethod
     def from_text(file_path):
         input_file = open(file_path, "r")
         input_iter = input_file.__iter__()
@@ -82,9 +104,21 @@ class Graph:
         for i in range(num_of_nodes):
             graph.add_node(i)
 
+        edgestr = input_iter.next()
+
         pared_edges = []
-        for edge in input_iter:
-            pared_edges += [graph.parse_edge(edge)]
+        if edgestr.strip().lower() == 'r':
+            density = next(input_iter, None)
+            try:
+                density = float(density)
+                pared_edges = Graph.edges_for_random_graph(num_of_nodes, density_factor=density)
+            except TypeError:
+                pared_edges = Graph.edges_for_random_graph(num_of_nodes)
+        else:
+            pared_edges += [graph.parse_edge(edgestr)]
+            for edge in input_iter:
+                pared_edges += [graph.parse_edge(edge)]
+
         factors = Graph.calc_factors(pared_edges)
         for edge in pared_edges:
             edge.set_factors(factors)
@@ -157,6 +191,9 @@ class Edge(object):
         self._v = int(v)
         self._weights = map(int, weights)
         self._factors = [1] * len(weights)
+
+    def to_string(self):
+        return '{},{},{},{}'.format(self._u, self._v, self._weights,self.get_weight())
 
     def set_factors(self, factors):
         self._factors = factors
