@@ -1,0 +1,4 @@
+Shortest Path 1: [1, 17, 24, 3]
+Path Total Weight: 50360328.0
+Shortest Path 2: [1, 17, 15, 3]
+Path Total Weight: 50364431.0
