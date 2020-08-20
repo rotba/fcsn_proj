@@ -1,0 +1,319 @@
+%% This is file `elsarticle-template-1-num.tex',
+%%
+%% Copyright 2009 Elsevier Ltd
+%%
+%% This file is part of the 'Elsarticle Bundle'.
+%% ---------------------------------------------
+%%
+%% It may be distributed under the conditions of the LaTeX Project Public
+%% License, either version 1.2 of this license or (at your option) any
+%% later version.  The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.2 or later is part of all distributions of LaTeX
+%% version 1999/12/01 or later.
+%%
+%% Template article for Elsevier's document class `elsarticle'
+%% with numbered style bibliographic references
+%%
+%% $Id: elsarticle-template-1-num.tex 149 2009-10-08 05:01:15Z rishi $
+%% $URL: http://lenova.river-valley.com/svn/elsbst/trunk/elsarticle-template-1-num.tex $
+%%
+\documentclass[preprint,12pt]{elsarticle}
+
+%% Use the option review to obtain double line spacing
+%% \documentclass[preprint,review,12pt]{elsarticle}
+
+%% Use the options 1p,twocolumn; 3p; 3p,twocolumn; 5p; or 5p,twocolumn
+%% for a journal layout:
+%% \documentclass[final,1p,times]{elsarticle}
+%% \documentclass[final,1p,times,twocolumn]{elsarticle}
+%% \documentclass[final,3p,times]{elsarticle}
+%% \documentclass[final,3p,times,twocolumn]{elsarticle}
+%% \documentclass[final,5p,times]{elsarticle}
+%% \documentclass[final,5p,times,twocolumn]{elsarticle}
+
+%% The graphicx package provides the includegraphics command.
+\usepackage{graphicx}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+%% The amssymb package provides various useful mathematical symbols
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{mathtools}
+%% The amsthm package provides extended theorem environments
+%% \usepackage{amsthm}
+
+%% The lineno packages adds line numbers. Start line numbering with
+%% \begin{linenumbers}, end it with \end{linenumbers}. Or switch it on
+%% for the whole article with \linenumbers after \end{frontmatter}.
+\usepackage{lineno}
+
+\usepackage{xspace}
+\usepackage[utf8]{inputenc}
+ 
+\usepackage[svgnames]{xcolor}
+  \definecolor{diffstart}{named}{Grey}
+  \definecolor{diffincl}{named}{Green}
+  \definecolor{diffrem}{named}{OrangeRed}
+
+\usepackage{listings}
+  \lstdefinelanguage{diff}{
+    basicstyle=\ttfamily\small,
+    morecomment=[f][\color{diffstart}]{@@},
+    morecomment=[f][\color{diffincl}]{+\ },
+    morecomment=[f][\color{diffrem}]{-\ },
+  }
+
+\newcommand{\ff}{\textit{failure-and-fix}\xspace}
+%\newcommand{\ff}{\textit{FF}\xspace}
+
+
+%
+% Add comments in the text
+%
+\usepackage{booktabs}
+\usepackage{ifthen}
+\usepackage{color}
+\usepackage{lipsum}    
+\usepackage{amssymb}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\usepackage{mathtools}
+\newboolean{showcomments}
+\setboolean{showcomments}{true}
+
+%\setboolean{showcomments}{false}
+
+\ifthenelse{\boolean{showcomments}}
+  {\newcommand{\nb}[3]{
+  {\color{#2}\small\fbox{\bfseries\sffamily\scriptsize#1}}
+  {\color{#2}\sffamily\small$\triangleright~$\textit{\small #3}$~\triangleleft$}
+  }
+  }
+  {\newcommand{\nb}[3]{}
+  }
+
+% \newcommand\Eran[1]{\nb{\textbf{Eran:}}{blue}{#1}}
+% \newcommand\Rui[1]{\nb{\textbf{Rui:}}{orange}{#1}}
+
+
+\newcommand\commentout[1]{ }
+
+
+
+%% natbib.sty is loaded by default. However, natbib options can be
+%% provided with \biboptions{...} command. Following options are
+%% valid:
+
+%%   round  -  round parentheses are used (default)
+%%   square -  square brackets are used   [option]
+%%   curly  -  curly braces are used      {option}
+%%   angle  -  angle brackets are used    <option>
+%%   semicolon  -  multiple citations separated by semi-colon
+%%   colon  - same as semicolon, an earlier confusion
+%%   comma  -  separated by comma
+%%   numbers-  selects numerical citations
+%%   super  -  numerical citations as superscripts
+%%   sort   -  sorts multiple citations according to order in ref. list
+%%   sort&compress   -  like sort, but also compresses numerical citations
+%%   compress - compresses without sorting
+%%
+%% \biboptions{comma,round}
+
+% \biboptions{}
+
+\journal{Journal Name}
+
+\begin{document}
+
+\begin{frontmatter}
+
+%% Title, authors and addresses
+
+\title{Prioritized Multi-Criteria Dijkstra k-Shortest path}
+
+%% use the tnoteref command within \title for footnotes;
+%% use the tnotetext command for the associated footnote;
+%% use the fnref command within \author or \address for footnotes;
+%% use the fntext command for the associated footnote;
+%% use the corref command within \author for corresponding author footnotes;
+%% use the cortext command for the associated footnote;
+%% use the ead command for the email address,
+%% and the form \ead[url] for the home page:
+%%
+%% \title{Title\tnoteref{label1}}
+%% \tnotetext[label1]{}
+%% \author{Name\corref{cor1}\fnref{label2}}
+%% \ead{email address}
+%% \ead[url]{home page}
+%% \fntext[label2]{}
+%% \cortext[cor1]{}
+%% \address{Address\fnref{label3}}
+%% \fntext[label3]{}
+
+
+%% use optional labels to link authors explicitly to addresses:
+%% \author[label1,label2]{<author name>}
+%% \address[label1]{<address>}
+%% \address[label2]{<address>}
+
+
+
+\address{Ben Gurion University of the Negev, Israel}
+
+
+
+
+
+\end{frontmatter}
+
+%%
+%% Start line numbering here if you want
+%%
+\linenumbers
+
+%% main text
+
+
+%\section{Paper Outline}
+%\Roni{This is not a real section, I'm just putting here the outline I'd like without erasing the text you already have}
+
+
+
+The following algorithm is an approach to find the K-shortest paths in a given multi-criteria graph (i.e, the weight functions maps an edge to a vector of weights). The first step in the algorithm is to reduce the graph to a single criteria graph, and the second step is to apply dijkstra algorithm to find the shortest path between 2 vertices in a given graph, and then, to remove the lightest edge from the path found. Removing the lightest edge ensures that when applying dijkstra in the next iteration, the output will be the second shortest path between the source and the target. 
+
+Our reduction might look overwhelming at first, but one can simply think about it as treating the reduced number as a sequence of bits (i.e, binary representation) and that each value in the weights vector of a given edge is mapped into an exclusive sub-sequence of bits by applying a suitable binary shift (i.e, multiplication with some 2's exponent). To calculate the appropriate aggregation vector (i.e finding the suitable 2's exponents) we're simply checking what is the maximum of bits necessary for each entry in the weights vector ( $\ceil[\big]{\log (\sum_{x \in projW_i} x)}$ bits), and how much room it should reserve for the former weights ($ans(i-1)$).
+
+\newcommand\myfunc[4]{%
+  \begingroup
+  \setlength\arraycolsep{0pt}
+  #1\colon\begin{array}[t]{c >{{}}c<{{}} c}
+             #2 & \to & #3
+          \end{array}%
+  \endgroup}
+  
+\begin{algorithm}
+\KwIn{${G = \big \langle V,E, \myfunc{W}{E}{\mathbb{R}^{n}} \big \rangle}$, $source \in V$ , $target \in V$, $k$}
+\KwOut{A set of the k shortest paths between source and target - $ans$}
+$G \gets \ reduce(G)$\;
+$ans \gets \emptyset$\;
+$noMorePaths \gets \textbf{false} $\;
+\While{$|ans|$ $<$ k OR $noMorePaths$}{
+    $p \gets \ dijkstra(G, source, target) $\;
+    \If{$p$ is \textbf{None}} {
+            $noMorePaths \gets \textbf{true} $\;
+        }
+    \Else{
+        $ans \gets ans \cup \{p\}$\;
+        $E \gets E \setminus \{getLightestEdge(p)\}$\;
+    }
+    
+}
+\Return{$ans$}\;
+\caption{main}
+\label{algorithm:main_steps}
+\end{algorithm}
+
+
+\begin{algorithm}
+\KwIn{G = \big \langle V,E, \myfunc{W}{E}{\mathbb{R}^{n}} \big \rangle}
+\KwOut{The same graph with reduced dimension weight function: $\myfunc{W'}{E}{\mathbb{R}}$}
+$aggregationVector  \gets \ calcAggregationVector(G)$\;
+$W'  \gets \emptyset$\;
+\For{$e \in E$}{
+        $W' \gets W' \cup \{\big \langle e, W(e)\cdot aggregationVector \big \rangle\}$\;
+    }
+\Return $\big \langle V,E,W' \big \rangle$;
+\caption{reduce}
+\label{algorithm:reduce}
+\end{algorithm}
+
+\begin{algorithm}
+\KwIn{G = \big \langle V,E, \myfunc{W}{E}{\mathbb{R}^{n}} \big \rangle}
+\KwOut{Vector of weights to aggregate each weight vector into a single value by applying dot product}
+$ans  \gets \ \{\big \langle 0,0 \big \rangle\}$\;
+$W'  \gets \emptyset$\;
+\For{$i \in [1, \dots ,n]$}{
+        $projW_i \gets map( \lambda  \ e: W(e)(i), E)$\;
+        $ans \gets ans \cup \{\big \langle i, ans(i-1) + \ceil[\big]{\log (\sum_{x \in projW_i} x)} \big \rangle\}$\;
+}
+$ans \gets map( \lambda  \ x: 2^x, ans)$\;
+\Return $ans$;
+\caption{calcAggregationVector}
+\label{algorithm:calcAggregationVector}
+\end{algorithm}
+
+
+
+
+
+
+% \subsection{\bf Finding fix commits of an issue}
+% In this section Bugminer is crossing the issue tracker and the VCS and associating commits to issues.
+% We are determining that a commit {\bf c}  is a fix-commit of issue {\bf i} if {\bf c}'s log references {\bf i}'s id and {\bf c} contains source changes (thas is, not for example only documentation changes).
+
+
+% \subsection{\bf Extracting valid test cases from a fix-commit}
+% This is the central process of our strategy. Here we're generating testcases for the given fix-commit, and returning only those that fails in it's parent buggy commit. To be more formal, given fix-commit {\bf c}:
+% \begin{enumerate}
+%     \item checkout to c
+%     \item generate testcases in c using evosuite
+%     \item run all generated testcases
+%     \item checkout to the parent of c
+%     \item patch the testcases that we're previously generated
+%     \item unpatch the uncompiling testcases
+%     \item run generated compiling testscases
+%     \item return all the testcases that passed in c and failed in c's parent
+% \end{enumerate}
+
+
+% \section{Problem Definition}
+
+% %The purpose of the proposed tool is to export
+% The input to our tool is ....
+
+% The output is a set of tuples of the form 
+% $\langle I, C_{buggy}, C_{fixed}, T \rangle$, 
+% where $I$ is an issue in the issue tracker reporting a bug, 
+% $C_{buggy}$ is a commit in the version control in which the reported bug exists, 
+% $C_{fixed}$ is the earliest commit after $C_{buggy}$ in which the 
+
+% Our goal is to frame states of a given project when a certain bug had just fixed, and to associate this fix with the fixed components and with a test that fails without the fix and pass with the fix. 
+
+
+% \section{Don't know where to put}
+% A bug is associated with:
+% (1) issue ID, (2) commit that fixed it (referred to as the fix-commit), 
+% (3) the latest commit before the fix-commit in which the bug still exists, 
+% (4) a test that passes in 3 and fails in 2
+
+% (you can copy from the introduction, and elaborate here a bit more)
+
+
+
+
+
+%% References with bibTeX database:
+
+\bibliographystyle{model1-num-names}
+\bibliography{sample}
+
+%% Authors are advised to submit their bibtex database files. They are
+%% requested to list a bibtex style file in the manuscript if they do
+%% not want to use model1-num-names.bst.
+
+%% References without bibTeX database:
+
+% \begin{thebibliography}{00}
+
+%% \bibitem must have the following form:
+%%   \bibitem{key}...
+%%
+
+% \bibitem{}
+
+% \end{thebibliography}
+
+
+\end{document}
+
+%%
+%% End of file `elsarticle-template-1-num.tex'.
