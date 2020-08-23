@@ -1,6 +1,7 @@
 import math
 import itertools
 import random
+from functools import reduce
 
 from node import *
 
@@ -92,43 +93,55 @@ class Graph:
 
     @staticmethod
     def from_text(file_path):
-        input_file = open(file_path, "r")
-        input_iter = input_file.__iter__()
-        num_of_nodes = int(input_iter.next())
-        k = int(input_iter.next())
-        initial_node_number = int(input_iter.next())
-        dest_node_number = int(input_iter.next())
+        with open(file_path, "r") as input_file:
+            input_iter = input_file.__iter__()
+            num_of_nodes = int(next(input_iter))
+            k = int(next(input_iter))
+            initial_node_number = int(next(input_iter))
+            dest_node_number = int(next(input_iter))
 
-        # graph declaration
-        graph = Graph()
-        for i in range(num_of_nodes):
-            graph.add_node(i)
+            # graph declaration
+            graph = Graph()
+            for i in range(num_of_nodes):
+                graph.add_node(i)
 
-        edgestr = input_iter.next()
+            edgestr = next(input_iter)
 
-        pared_edges = []
-        if edgestr.strip().lower() == 'r':
-            density = next(input_iter, None)
-            try:
-                density = float(density)
-                pared_edges = Graph.edges_for_random_graph(num_of_nodes, density_factor=density)
-            except TypeError:
-                pared_edges = Graph.edges_for_random_graph(num_of_nodes)
-        else:
-            pared_edges += [graph.parse_edge(edgestr)]
-            for edge in input_iter:
-                pared_edges += [graph.parse_edge(edge)]
+            pared_edges = []
+            if edgestr.strip().lower() == 'r':
+                density = next(input_iter, None)
+                try:
+                    density = float(density)
+                    pared_edges = Graph.edges_for_random_graph(num_of_nodes, density_factor=density)
+                except TypeError:
+                    pared_edges = Graph.edges_for_random_graph(num_of_nodes)
+            else:
+                pared_edges += [graph.parse_edge(edgestr)]
+                for edge in input_iter:
+                    pared_edges += [graph.parse_edge(edge)]
 
-        factors = Graph.calc_factors(pared_edges)
-        for edge in pared_edges:
-            edge.set_factors(factors)
-            graph.add_edge(edge)
-        graph.set_num_of_nodes(num_of_nodes)
-        graph.set_initial_node(initial_node_number)
-        graph.set_dest_node(dest_node_number)
-        graph.set_dest_k(k)
+            factors = Graph.calc_factors(pared_edges)
+            for edge in pared_edges:
+                edge.set_factors(factors)
+                graph.add_edge(edge)
+            graph.set_num_of_nodes(num_of_nodes)
+            graph.set_initial_node(initial_node_number)
+            graph.set_dest_node(dest_node_number)
+            graph.set_dest_k(k)
+            return graph
 
-        return graph
+    def copy_and_return(self):
+        ret_g = Graph()
+        ret_g.num_nodes = self.num_nodes
+        ret_g.set_initial_node(self._initial_node)
+        ret_g.set_dest_node(self._dest_node)
+        ret_g.set_num_of_nodes(self._num_of_nodes)
+        ret_g.set_dest_k(self._k)
+        for i in range(ret_g._num_of_nodes):
+            ret_g.add_node(i)
+        for edge in self._edges:
+            ret_g.add_edge(edge.copy_and_return())
+        return ret_g
 
     def set_initial_node(self, initial_node_number):
         self._initial_node = initial_node_number
@@ -189,11 +202,22 @@ class Edge(object):
     def __init__(self, u, v, weights):
         self._u = int(u)
         self._v = int(v)
-        self._weights = map(int, weights)
+        self._weights = list(map(int, weights))
         self._factors = [1] * len(weights)
+
+    def get_tuple(self):
+        return (self._u, self._v)
+
+    def get_tuple_rev(self):
+        return ( self._v ,self._u)
 
     def to_string(self):
         return '{},{},{},{}'.format(self._u, self._v, self._weights,self.get_weight())
+
+    def copy_and_return(self):
+        ret_e = Edge(self._u, self._v, self._weights)
+        ret_e.set_factors(self._factors)
+        return ret_e
 
     def set_factors(self, factors):
         self._factors = factors
