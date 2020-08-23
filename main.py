@@ -30,7 +30,8 @@ def plot_graph_and_sol(graph_copy, solution):
 	for edge in graph_copy._edges:
 		G.add_edge(edge._u,edge._v, label='{}={}'.format(edge._weights, edge.get_weight()))
 	edge_path_shortest = []
-	if len(solution._paths) > 1:
+	edge_path_second = []
+	if len(solution._paths) >= 1:
 		path = solution._paths[1]._path
 		edge_path_shortest = [(u, v) for (u, v, d) in G.edges(data=True) if
 					 any([u, v] == path[i:i + 2] for i in range(len(path) - 1)) or
@@ -38,6 +39,19 @@ def plot_graph_and_sol(graph_copy, solution):
 	for (u,v) in edge_path_shortest:
 		G[u][v]['color'] = 'red'
 		G[v][u]['color'] = 'red'
+
+	if len(solution._paths) >= 2:
+		path = solution._paths[2]._path
+		edge_path_second = [(u, v) for (u, v, d) in G.edges(data=True) if
+					 any([u, v] == path[i:i + 2] for i in range(len(path) - 1)) or
+					 any([v, u] == path[i:i + 2] for i in range(len(path) - 1))]
+	for (u,v) in edge_path_second:
+		if G[u][v].get('color') == 'red' or G[v][u].get('color') == 'red':
+			G[u][v]['color'] = '0.5:blue;0.5:red'
+			G[v][u]['color'] = '0.5:blue;0.5:red'
+		else:
+			G[u][v]['color'] = 'blue'
+			G[v][u]['color'] = 'blue'
 
 	write_dot(G, 'my_g.dot')
 
@@ -80,8 +94,8 @@ def solve(input, print_graph=False, draw_graph=True):
 			u = u + 1
 	else:
 		print("arguments 2 and 3 must be btween 1 and num of nodes")
-		
-	plot_graph_and_sol(graph_copy, solution)
+	if draw_graph:
+		plot_graph_and_sol(graph_copy, solution)
 
 	return solution
 
